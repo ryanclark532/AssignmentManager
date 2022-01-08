@@ -3,9 +3,8 @@ using System.Data.SqlClient;
 static void Main(string[] args)
 {
     String conString = "Data Source=localhost;Initial Catalog=AssignmentDB;Persist Security Info=True;User ID=SA;Password=Ryan1234";
-   
+
     bool exit = false;
-    List<Assignment> assignments = new List<Assignment>();
     while (!exit)
     {
 
@@ -14,18 +13,12 @@ static void Main(string[] args)
         switch (userCollection)
         {
             case "1":
-                if(assignments.Count<=0)
+                foreach (Assignment assignment in Assignment.getAllAssignments())
                 {
-                    Console.WriteLine("You Currently Dont Have Any Assignemnts");
+                    Console.WriteLine(assignment);
                 }
-                else
-                {
-                    foreach (Assignment assignment in assignments)
-                    {
-                        Console.WriteLine(assignment.ToString());
-                    }
-                }
-                
+
+
                 break;
             case "2":
 
@@ -41,20 +34,19 @@ static void Main(string[] args)
                 Console.WriteLine("Due Date, in dd/MM/YY format: ");
                 String date = Console.ReadLine();
 
-                DateOnly dueDate =DateOnly.Parse(date);
+                DateTime dueDate =DateTime.Parse(date);
                 Console.WriteLine(String.Format("{0}/{1}/{2}", dueDate.Day, dueDate.Month, dueDate.Year));
                 Assignment a = new Assignment(title, description, subject, dueDate, conString);
                 a.save();
-                assignments.Add(a);
                 break;
 
             case "3":
-                foreach (Assignment assignment in assignments.OrderBy(x => x.dueDate).ToList())
+
+                foreach (var item in Assignment.getDueDates())
                 {
-                    Console.WriteLine(String.Format("{0}    {1}", assignment.dueDate, assignment.title));
+                    Console.WriteLine(String.Format("{0}    {1}", item.Key,item.Value.ToShortDateString());
                 }
-
-
+               
                 break;
 
             case "4":
